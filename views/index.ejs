@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+    crossorigin="anonymous">
+
+  <title>Fire Base Fire Monitor</title>
+  <style>
+   #map {
+        height: 800px;
+        width: 100%;
+      }
+      </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+  
+  <script>
+ 
+  
+   var data = {
+        sender: null,
+        timestamp: null,
+        lat: null,
+        lng: null,
+        incendio: 1
+      };
+
+     var heatmap = null;
+      var config = {
+        apiKey: "AIzaSyCm-CNc8BEwDvh23Ck-G6jbXkmLapm2P6c",
+        authDomain: "firemonitor-474e5.firebaseapp.com",
+        databaseURL: "https://firemonitor-474e5.firebaseio.com",
+        projectId: "firemonitor-474e5",
+        storageBucket: "firemonitor-474e5.appspot.com",
+        messagingSenderId: "170747492615"
+      };
+      firebase.initializeApp(config);
+      var database = firebase.database();
+      var user = firebase.auth().currentUser;
+      
+
+       function makeInfoBox(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+        controlUI.style.backgroundColor = '#fff';
+        controlUI.style.border = '2px solid #fff';
+        controlUI.style.borderRadius = '2px';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.marginTop = '10px';
+        controlUI.style.textAlign = 'center';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = 'rgb(25,25,25)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '100%';
+        controlText.style.padding = '6px';
+        controlText.textContent = 'Monitor de Incendios UPiloto';
+        controlUI.appendChild(controlText);
+      }
+
+     /**
+       * Creates a map object with a click listener and a heatmap.
+       */
+       function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 0, lng: 0},
+          zoom: 3,
+          styles: [{
+            featureType: 'poi',
+            stylers: [{ visibility: 'off' }]  // Turn off POI.
+          },
+          {
+            featureType: 'transit.station',
+            stylers: [{ visibility: 'off' }]  // Turn off bus, train stations etc.
+          }],
+          disableDoubleClickZoom: false,
+          streetViewControl: false,
+        });
+
+         // Create the DIV to hold the control and call the makeInfoBox() constructor
+        // passing in this DIV.
+        var infoBoxDiv = document.createElement('div');
+        makeInfoBox(infoBoxDiv, map);
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(infoBoxDiv);
+
+        // Listen for clicks and add the location of the click to firebase.
+        map.addListener('click', function(e) {
+          data.lat = e.latLng.lat();
+          data.lng = e.latLng.lng();
+          data.sender = guid();
+          data.incendio = 0;
+        
+          //addToFirebase(data);
+         
+          writeUserData(1,data);
+        });
+
+        // Create a heatmap.
+      heatmap = new google.maps.visualization.HeatmapLayer({
+          data: [],
+          map: map,
+          radius: 16
+        });
+
+        
+      }
+
+      function writeUserData(userId, dataSave) {
+            firebase.database().ref('mapas/' + dataSave.sender).set(
+              dataSave
+            );
+      }
+
+      function guid() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+      }
+var observadorIncendios = firebase.database().ref('mapas/');
+observadorIncendios.on('value', function(snapshot) {
+  
+  var items = snapshot.val();
+ 
+
+ // var point = new google.maps.LatLng( data.lat, data.lng);
+ heatmap.setData([]);
+  for (var p in items) {
+    var item = items[p];
+    console.log(item);
+     if(item.incendio == 1){
+      var point = new google.maps.LatLng(item.lat, item.lng);
+      heatmap.getData().push(point);
+     }
+   
+    
+  }     
+
+  
+ 
+});
+      
+   
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADc_uhXpateIvmV2z4Eqc4trRKpCYSaXQ&libraries=visualization&callback=initMap">
+</script>
+ 
+</body>
+
+</html>
