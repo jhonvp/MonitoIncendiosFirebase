@@ -13,15 +13,70 @@
   <title>Fire Base Fire Monitor</title>
   <style>
    #map {
-        height: 800px;
+        height: 550px;
         width: 100%;
       }
       </style>
 </head>
 
 <body>
+    <nav class="navbar sticky-top navbar-light bg-light" >
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/images/logoupiloto.png" width="25%" height="25%" alt="">
+                Redes <span class="d-none d-md-inline">de Sensores </span>Inalámbricas :: Monitorización en Tiempo Real de Incendios
+              </a>
+          </div>
+       
+      </nav>
+      <br>
+      <div class="container">
+        <div class="jumbotron">
+            <h3>Problema</h3>
+            <p class="text-justify"> Los bosques representan una parte importantísima del ecosistema, ellos son hogar del 80% de la biodiversidad mundial, absorben el CO2, regulan y son fuente de materiales y alimento para millones de personas.</p>
+            <p class="text-justify">Los incendios forestales son una amenaza en partes del mundo donde haya una gran cobertura boscosa. Muchas pueden ser sus causas como descuidos de turistas, manos criminales o épocas de año en que hace mucho calor. Sus consecuencias representan un daño difícil de reparar en la capa vegetal y debajo del suelo. En el país se afecta un promedio de 70000 hectareas anuales por incendios forestales como lo muestra estadísticas del 2016 por el IDEAM. </p>
+            
+            
+            
+            <h3>Justificación</h3>
+            <p class="text-justify"> Colombia cuenta con 59 millones de hectáreas, equivalentes al 52.2% de todo el territorio, convirtiéndolo en el 3er país de Suramérica con más área de bosques (minambiente, 2012).</p>
+            
+            <p class="text-justify">Por lo tanto, es indispensable no solo mayores medidas para combatirlos sino mejor aún para evitarlos o detectarlos tempranamente. En este caso usando redes de sensores debido a que son una tecnología económica, consume poca energía, puede cubrir una gran área por su escalabilidad y son robustas al auto configurarse ante un fallo de alguno de sus nodos.</p>
+            
+            <h3>Objetivo</h3>
+            <p class="text-justify">Diseñar una red de sensores inalámbrica con tecnología x que mida parámetros como humedad y temperatura para la detección y alerta de incendios forestales.</p>
+            
+            <h4>Objetivos específicos</h4>
+            <ul>
+            <li>Analizar los aspectos técnicos y características de los equipos a usar para hacer una buena elección de estos.</li>
+            <li>Diseñar un esquema de la red que se planea utilizar.</li>
+            <li>Definir una metodología con los procesos a seguir para una implementación en campo.</li>
+          </ul>
+          <h3>Tecnologías</h3>
+          <ul>
+              <li>Raspberry PI 3</li>
+              <li>Módulos XBee</li>
+              <li>Antenas Ubiquiti</li>
+              <li>Sensor de Incendios (Flame Sensor)</li>
+              <li>FireBase</li>
+              <li>NodeJS</li>
+              <li>Bootstrap V 4.0</li>
+              <li>Google Maps API</li>
+            </ul>
+            <h3>Estudiantes</h3>
+          <p>Jhon Edisson Villarreal Padilla </p>
+          <p>Jhon Edisson Villarreal Padilla </p>
+          <h3>Profesor</h3>
+          <p>Jhon Edisson Villarreal Padilla </p>
+          </div>
+          
+      </div>
+      <br>
+      
+      <div class="container">
 
   <div id="map"></div>
+</div>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -84,8 +139,8 @@
        */
        function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 0, lng: 0},
-          zoom: 3,
+          center: {lat: 4.632663, lng: -74.065219},
+          zoom: 19,
           styles: [{
             featureType: 'poi',
             stylers: [{ visibility: 'off' }]  // Turn off POI.

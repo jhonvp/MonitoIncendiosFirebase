@@ -14,13 +14,25 @@ router.get('/', function (req, res, next) {
 })
 
 router.post('/reportarIncendio', function (req, res, next) {
+  console.log(req.body.mensaje);
+  let mensaje = req.body.mensaje;
+  let resultado = mensaje.split(";");
+  console.log(
+    {
+      sender: resultado[0],
+      timestamp: null,
+      lat: resultado[1],
+      lng: resultado[2],
+      incendio: resultado[3]
+    }
+  );
   admin.database().ref('mapas/1').set(
     {
-      sender: req.body.id,
+      sender: resultado[0],
       timestamp: null,
-      lat: req.body.lat,
-      lng: req.body.lng,
-      incendio: req.body.incendio
+      lat: resultado[1],
+      lng: resultado[2],
+      incendio: resultado[3]
     }
   )
   res.status(200).json({})
