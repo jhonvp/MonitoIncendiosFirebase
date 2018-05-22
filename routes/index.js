@@ -26,7 +26,7 @@ router.post('/reportarIncendio', function (req, res, next) {
       incendio: resultado[3]
     }
   );
-  admin.database().ref('mapas/1').set(
+  admin.database().ref('mapas/'+resultado[0]).set(
     {
       sender: resultado[0],
       timestamp: null,
